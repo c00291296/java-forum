@@ -5,6 +5,11 @@ import java.sql.Statement;
 
 public class ForumDB {
     private Connection connection;
+    private int id = 0;
+
+    private int getid() {
+        return id++;
+    }
 
     public ForumDB() {
         try {
@@ -29,11 +34,11 @@ public class ForumDB {
         }
     }
 
-    private void addSubforum(String name) {
+    public void addSubforum(String name) {
         try {
-        var ps = connection.prepareStatement("INSERT INTO Subforum (name) VALUES (?)");
-        ps.setString(0, name);
-        ps.executeQuery();
+        var ps = connection.prepareStatement("INSERT INTO Subforum (id, name) VALUES (newid(), ?);");
+        ps.setString(1, name);
+        ps.executeUpdate();
         } catch (Exception e) {
             e.printStackTrace();
         }
