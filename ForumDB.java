@@ -67,6 +67,18 @@ public class ForumDB {
         try {
             var ps = connection.prepareStatement("UPDATE Posts SET text = '[CENSORED]' WHERE id = ?;");
             ps.setInt(1, postID);
+            ps.executeUpdate();
+            ps.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void appointModerator(int userID) {
+        try {
+            var ps = connection.prepareStatement("INSERT INTO AdminList VALUES (?);");
+            ps.setInt(1, userID);
+            ps.executeUpdate();
         } catch (Exception e) {
             e.printStackTrace();
         }
