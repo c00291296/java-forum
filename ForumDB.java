@@ -23,6 +23,17 @@ public class ForumDB {
             while (rs.next()) {
                 System.out.println(rs.getString("name"));
             }
+            s.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void addSubforum(String name) {
+        try {
+        var ps = connection.prepareStatement("INSERT INTO Subforum (name) VALUES (?)");
+        ps.setString(0, name);
+        ps.executeQuery();
         } catch (Exception e) {
             e.printStackTrace();
         }
