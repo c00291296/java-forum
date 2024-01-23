@@ -62,4 +62,13 @@ public class ForumDB {
                 e.printStackTrace();
             }
         }
+    
+    public void censorPost (int postID) {
+        try {
+            var ps = connection.prepareStatement("UPDATE Posts SET text = '[CENSORED]' WHERE id = ?;");
+            ps.setInt(1, postID);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }
