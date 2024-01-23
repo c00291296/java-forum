@@ -2,6 +2,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.util.concurrent.Exchanger;
 
 public class ForumDB {
     private Connection connection;
@@ -39,8 +40,26 @@ public class ForumDB {
         var ps = connection.prepareStatement("INSERT INTO Subforum (name) VALUES (?);");
         ps.setString(1, name);
         ps.executeUpdate();
+        ps.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
+
+    public void addPostToSubforum(int subforum_id, String post_title, String post_body, String post_date,
+                                  int userid)
+        {
+            try {
+                String post_text = post_title.toUpperCase() + "\n\n" + post_body;
+                var ps = connection.prepareStatement("INSERT INTO Posts (userid, subforumid, time, text) VALUES (?, ?, ?, ?);");
+                ps.setInt(1, userid);
+                ps.setInt(2, subforum_id);
+                ps.setString(3, post_date);
+                ps.setString(4, post_text);
+                ps.executeUpdate();
+                ps.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
 }
