@@ -36,7 +36,7 @@ public class ForumDB {
 
     public void addSubforum(String name) {
         try {
-        var ps = connection.prepareStatement("INSERT INTO Subforum (id, name) VALUES (newid(), ?);");
+        var ps = connection.prepareStatement("INSERT INTO Subforum (name) VALUES (?);");
         ps.setString(1, name);
         ps.executeUpdate();
         } catch (Exception e) {

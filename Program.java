@@ -7,5 +7,6 @@ public class Program {
     public static void main(String[] args) {
         ForumDB fdb = new ForumDB();
         fdb.printUsers();
+        fdb.addSubforum("Ostriches");
     }
 }
