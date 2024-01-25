@@ -83,4 +83,29 @@ public class ForumDB {
             e.printStackTrace();
         }
     }
+
+    public void getUserName(int userid) {
+        try {
+            var ps = connection.prepareStatement("select name from Users where id = ?;");
+            ps.setInt(1, userid);
+            var rs = ps.executeQuery();
+            rs.next();
+            System.out.println(rs.getString("name"));
+            ps.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void setUserName(int userid, String name) {
+        try {
+            var ps = connection.prepareStatement("UPDATE Users SET name=? where id = ?;");
+            ps.setString(1, name);
+            ps.setInt(2, userid);
+            ps.executeUpdate();
+            ps.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }
