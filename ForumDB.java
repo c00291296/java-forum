@@ -84,7 +84,7 @@ public class ForumDB {
         }
     }
 
-    public void getUserName(int userid) {
+    public String getUserName(int userid) {
         try {
             var ps = connection.prepareStatement("select name from Users where id = ?;");
             ps.setInt(1, userid);
@@ -92,8 +92,10 @@ public class ForumDB {
             rs.next();
             System.out.println(rs.getString("name"));
             ps.close();
+            return rs.toString();
         } catch (Exception e) {
             e.printStackTrace();
+            return e.getStackTrace().toString();
         }
     }
 

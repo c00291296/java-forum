@@ -4,7 +4,7 @@ public class Forum {
         this.fdb = fdb;
     }
     public void addSubforum(String title) {
-
+        fdb.addSubforum(title);
     }
 
     public Subforum[] getSubforums() {

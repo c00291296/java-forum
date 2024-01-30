@@ -31,7 +31,7 @@ public class Post {
     }
 
     public void getCensored() {
-
+        fdb.censorPost(id);
     }
 
     public void setBody(String body) {

@@ -7,6 +7,14 @@ public class User extends Guest {
         this.fdb = fdb;
     }
 
+    public String getName() {
+        return fdb.getUserName(id);
+    }
+
+    public void setName(String name) {
+        fdb.setUserName(id, name);
+    }
+
     protected int getId() {
         return id;
     }
