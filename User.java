@@ -1,3 +1,5 @@
+import java.util.Date;
+
 public class User extends Guest {
     private int id;
     private ForumDB fdb;
@@ -24,6 +26,6 @@ public class User extends Guest {
     }
 
     public Post createPost (String title, String body) {
-        
+        return fdb.createPost(title, body, new Date(), getId()); //use the date that is now
     }
 }

@@ -7,7 +7,6 @@ import java.time.temporal.TemporalField;
 import java.util.concurrent.Exchanger;
 import java.util.Calendar;
 import java.util.Date;
-import java.sql.Date;
 
 public class ForumDB {
     private Connection connection;
@@ -128,6 +127,66 @@ public class ForumDB {
         } catch (Exception e) {
             e.printStackTrace();
             return new Post(postID, this);
+        }
+    }
+
+    public String getPostTitle(int id) {
+        try {
+            var ps = connection.prepareStatement("SELECT title FROM Posts WHERE id = ?;");
+            ps.setInt(1, id);
+            ResultSet rs = ps.executeQuery();
+            String title = rs.getString("title");
+            ps.close();
+            rs.close();
+            return title;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "[ERROR]" + e.getStackTrace();
+        }
+    }
+
+    public String getPostBody(int id) {
+        try {
+            var ps = connection.prepareStatement("SELECT body FROM Posts WHERE id = ?;");
+            ps.setInt(1, id);
+            ResultSet rs = ps.executeQuery();
+            String title = rs.getString("body");
+            ps.close();
+            rs.close();
+            return title;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "[ERROR]" + e.getStackTrace();
+        }
+    }
+
+    public Date getPostDate(int id) {
+        try {
+            var ps = connection.prepareStatement("SELECT date FROM Posts WHERE id = ?;");
+            ps.setInt(1, id);
+            ResultSet rs = ps.executeQuery();
+            Date date = rs.getDate("date");
+            ps.close();
+            rs.close();
+            return date;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new Date();
+        }
+    }
+
+    public String getPostAuthor(int postId) {
+        try {
+            var ps = connection.prepareStatement("SELECT date FROM Posts WHERE id = ?;");
+            ps.setInt(1, id);
+            ResultSet rs = ps.executeQuery();
+            Date date = rs.getDate("date");
+            ps.close();
+            rs.close();
+            return date;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "[ERROR]";
         }
     }
 }
