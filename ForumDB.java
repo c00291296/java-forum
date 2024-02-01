@@ -177,16 +177,17 @@ public class ForumDB {
 
     public String getPostAuthor(int postId) {
         try {
-            var ps = connection.prepareStatement("SELECT date FROM Posts WHERE id = ?;");
+            var ps = connection.prepareStatement("SELECT name FROM Users, Posts WHERE userid = Users.id AND Posts.id = ?;");
             ps.setInt(1, id);
             ResultSet rs = ps.executeQuery();
-            Date date = rs.getDate("date");
+            String name  = rs.getString("name");
             ps.close();
             rs.close();
-            return date;
+            return name;
         } catch (Exception e) {
             e.printStackTrace();
             return "[ERROR]";
         }
     }
+
 }
