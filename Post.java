@@ -5,6 +5,7 @@ public class Post {
         this.id=id;
         this.fdb=fdb;
     }
+    
 
     public void addAttachement(Attachement attachement) {
 

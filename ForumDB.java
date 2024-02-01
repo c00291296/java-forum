@@ -2,15 +2,16 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.time.LocalDate;
+import java.time.temporal.TemporalField;
 import java.util.concurrent.Exchanger;
+import java.util.Calendar;
+import java.util.Date;
+import java.sql.Date;
 
 public class ForumDB {
     private Connection connection;
     private int id = 0;
-
-    private int getid() {
-        return id++;
-    }
 
     public ForumDB() {
         try {
@@ -108,6 +109,25 @@ public class ForumDB {
             ps.close();
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    public Post createPost(String title, String body, Date date, int authorId) {
+        int postID = -1; //is supposed to be a post containing [ERROR]
+        try {
+            var ps = connection.prepareStatement("INSERT INTO Posts (title, body, userid, date) OUTPUT INSERTED.id VALUES (?, ?, ?, ?);");
+            ps.setString(1, title);
+            ps.setString(2, body);
+            ps.setInt(3, authorId);
+            ps.setDate(4, new java.sql.Date(date.getTime()), Calendar.getInstance());
+            ResultSet rs = ps.executeQuery();
+            postID = rs.getInt("id");
+            ps.close();
+            rs.close();
+            return new Post(postID, this);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new Post(postID, this);
         }
     }
 }

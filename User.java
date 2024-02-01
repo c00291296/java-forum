@@ -22,4 +22,8 @@ public class User extends Guest {
     protected ForumDB getForumDB() {
         return fdb;
     }
+
+    public Post createPost (String title, String body) {
+        
+    }
 }
