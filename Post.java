@@ -38,4 +38,6 @@ public class Post {
     public void setBody(String body) {
         
     }
+
+    public int getId() {return id;}
 }

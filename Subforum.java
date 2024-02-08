@@ -7,18 +7,18 @@ public class Subforum {
     }
 
     public String getTitle() {
-        return "";
+        return fdb.getSubforumTitle(id);
     }
 
     public Post[] getPosts() {
-        return new Post[0];
+        return fdb.getSubforumPosts(id);
     }
     
     public void addPost(Post post) {
-
+        fdb.postPostToSubforum(id, post.getId());
     }
 
     public void removePost(Post post) {
-        
+        fdb.removePostFromSubforum(post.getId());
     }
 }
