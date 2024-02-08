@@ -5,8 +5,10 @@ import java.sql.Statement;
 import java.time.LocalDate;
 import java.time.temporal.TemporalField;
 import java.util.concurrent.Exchanger;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 public class ForumDB {
     private Connection connection;
@@ -187,6 +189,37 @@ public class ForumDB {
         } catch (Exception e) {
             e.printStackTrace();
             return "[ERROR]";
+        }
+    }
+
+    public Subforum[] getSubforums() {
+        List<Subforum> subforums = new ArrayList<Subforum>();
+        try {
+            var s = connection.createStatement();
+            var rs = s.executeQuery("SELECT id FROM Subforum;");
+            while (rs.next()) {
+                subforums.add(new Subforum(rs.getInt("id"), this));
+            }
+            s.close();
+            rs.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return subforums.toArray(new Subforum[0]);
+    }
+
+    public String getSubforumTitle(int id) {
+        try {
+            var ps = connection.prepareStatement("SELECT name FROM Subforum WHERE id = ?;");
+            ps.setInt(1, id);
+            ResultSet rs = ps.executeQuery();
+            String title = rs.getString("name");
+            ps.close();
+            rs.close();
+            return title;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "[ERROR]" + e.getStackTrace();
         }
     }
 

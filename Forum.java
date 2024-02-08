@@ -8,6 +8,6 @@ public class Forum {
     }
 
     public Subforum[] getSubforums() {
-        return new Subforum[0];
+        return fdb.getSubforums();
     }
 }
