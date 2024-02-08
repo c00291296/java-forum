@@ -3,6 +3,7 @@ public class Admin extends Moderator {
         super(id, fdb);
     }
 
-    public void appointModerator(User User) {
+    public void appointModerator(User user) {
+        super.getForumDB().appointModerator(user.getId());
     }
 }
