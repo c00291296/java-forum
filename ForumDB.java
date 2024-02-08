@@ -223,4 +223,45 @@ public class ForumDB {
         }
     }
 
+    public Post[] getSubforumPosts(int subforum_id) {
+        List<Post> posts = new ArrayList<Post>();
+        try {
+            var ps = connection.prepareStatement("SELECT id FROM Posts WHERE subforumid = ?;");
+            ps.setInt(1, subforum_id);
+            var rs = ps.executeQuery();
+
+            while (rs.next()) {
+                posts.add(new Post(rs.getInt("id"), this));
+            }
+            ps.close();
+            rs.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return posts.toArray(new Post[0]);
+    }
+
+    public void postPostToSubforum(int subforum_id, int post_id) {
+        try {
+            var ps = connection.prepareStatement("UPDATE Posts SET subforumid = ? WHERE id = ?;");
+            ps.setInt(1, subforum_id);
+            ps.setInt(2, post_id);
+            ps.executeUpdate();
+            ps.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void removePostFromSubforum(int post_id) {
+        try {
+            var ps = connection.prepareStatement("UPDATE Posts SET subforumid = NULL WHERE id = ?;");
+            ps.setInt(1, post_id);
+            ps.executeUpdate();
+            ps.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 }
