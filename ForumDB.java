@@ -76,6 +76,18 @@ public class ForumDB {
         }
     }
 
+    public void setPostBody (int postID, String body) {
+        try {
+            var ps = connection.prepareStatement("UPDATE Posts SET text = ? WHERE id = ?;");
+            ps.setString(1, body);
+            ps.setInt(2, postID);
+            ps.executeUpdate();
+            ps.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     public void appointModerator(int userID) {
         try {
             var ps = connection.prepareStatement("INSERT INTO AdminList VALUES (?);");

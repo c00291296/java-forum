@@ -12,19 +12,19 @@ public class Post {
     }
 
     public String getTitle() {
-        return "";
+        return fdb.getPostTitle(id);
     }
 
     public String getBody() {
-        return "";
+        return fdb.getPostBody(id);
     }
 
     public String getDate() {
-        return "";
+        return fdb.getPostDate(id).toString();
     }
 
     public String getAuthor() {
-        return "";
+        return fdb.getPostAuthor(id);
     }
 
     public Attachement[] getAttachements() {
@@ -36,7 +36,7 @@ public class Post {
     }
 
     public void setBody(String body) {
-        
+        fdb.setPostBody(id, body);
     }
 
     public int getId() {return id;}
