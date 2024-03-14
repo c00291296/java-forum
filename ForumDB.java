@@ -2,6 +2,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.temporal.TemporalField;
 import java.util.concurrent.Exchanger;
@@ -128,15 +129,15 @@ public class ForumDB {
     public Post createPost(String title, String body, Date date, int authorId) {
         int postID = -1; //is supposed to be a post containing [ERROR]
         try {
-            var ps = connection.prepareStatement("INSERT INTO Posts (title, body, userid, date) OUTPUT INSERTED.id VALUES (?, ?, ?, ?);");
+            var ps = connection.prepareStatement("INSERT INTO Posts (title, body, userid, date) VALUES (?, ?, ?, ?) RETURNING id ;");
             ps.setString(1, title);
             ps.setString(2, body);
             ps.setInt(3, authorId);
-            ps.setDate(4, new java.sql.Date(date.getTime()), Calendar.getInstance());
-            ResultSet rs = ps.executeQuery();
+            ps.setString(4, new SimpleDateFormat("yyyy-MM-dd").format(Calendar.getInstance().getTime()));
+            var rs = ps.executeQuery();
             postID = rs.getInt("id");
-            ps.close();
             rs.close();
+            ps.close();
             return new Post(postID, this);
         } catch (Exception e) {
             e.printStackTrace();
@@ -159,40 +160,40 @@ public class ForumDB {
         }
     }
 
-    public String getPostBody(int id) {
+    public String getPostBody(int postId) {
         try {
             var ps = connection.prepareStatement("SELECT body FROM Posts WHERE id = ?;");
-            ps.setInt(1, id);
+            ps.setInt(1, postId);
             ResultSet rs = ps.executeQuery();
-            String title = rs.getString("body");
+            String body = rs.getString("body");
             ps.close();
             rs.close();
-            return title;
+            return body;
         } catch (Exception e) {
             e.printStackTrace();
             return "[ERROR]" + e.getStackTrace();
         }
     }
 
-    public Date getPostDate(int id) {
+    public String getPostDate(int id) {
         try {
             var ps = connection.prepareStatement("SELECT date FROM Posts WHERE id = ?;");
             ps.setInt(1, id);
             ResultSet rs = ps.executeQuery();
-            Date date = rs.getDate("date");
+            String date = rs.getString("date");
             ps.close();
             rs.close();
             return date;
         } catch (Exception e) {
             e.printStackTrace();
-            return new Date();
+            return new Date().toString();
         }
     }
 
     public String getPostAuthor(int postId) {
         try {
-            var ps = connection.prepareStatement("SELECT name FROM Users, Posts WHERE userid = Users.id AND Posts.id = ?;");
-            ps.setInt(1, id);
+            var ps = connection.prepareStatement("SELECT name FROM Users, Posts WHERE Posts.userid = Users.id AND Posts.id = ?;");
+            ps.setInt(1, postId);
             ResultSet rs = ps.executeQuery();
             String name  = rs.getString("name");
             ps.close();
