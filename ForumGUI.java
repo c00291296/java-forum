@@ -1,6 +1,9 @@
 import javax.swing.JFrame;
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+
 import javax.swing.JTextArea;
 import javax.swing.border.Border;
 import javax.swing.JList;
@@ -11,6 +14,8 @@ public class ForumGUI {
     JFrame frame;
     Forum forum;
     Subforum[] subforums;
+    JScrollPane old_posts;
+
 
     final static int WINDOW_WIDTH = 800;
     final static int WINDOW_HEIGHT = 600;
@@ -28,7 +33,7 @@ public class ForumGUI {
         frame.setResizable(false);
         frame.setLayout(layout);
         refreshSubforumList();
-        refreshPostDisplay();
+        refreshPostDisplay(subforums[0]);
         frame.setVisible(true);
     }
 
@@ -40,19 +45,24 @@ public class ForumGUI {
         }
 
         var list = new JList<String>(subforumNames);
+        list.addMouseListener(new MouseAdapter() {
+            public void mouseClicked(MouseEvent me) {
+                refreshPostDisplay(subforums[list.getSelectedIndex()]);
+            }
+        });
         list.setFixedCellWidth(WINDOW_WIDTH / 5);
         list.setVisible(true);
         frame.add(list, BorderLayout.WEST);
     }
 
-    private void refreshPostDisplay() {
+    private void refreshPostDisplay(Subforum subforum) {
         var grid = new GridLayout(100, 1, 0, 10);
         var posts = new JPanel(grid);
         var scroll_posts = new JScrollPane(posts);
-        scroll_posts.setVisible(true);
+        
         posts.setAutoscrolls(true);
-        posts.setVisible(true);
-        for (Post p : subforums[0].getPosts()) {
+        
+        for (Post p : subforum.getPosts()) {
             System.out.println(p.getBody());
             JTextArea a = new JTextArea(p.getAuthor() + ", " + p.getTitle() + ":\n" + p.getBody() + "\n" + p.getDate());
             a.setLineWrap(true);
@@ -60,7 +70,17 @@ public class ForumGUI {
             a.setVisible(true);
             posts.add(a);
         }
+        posts.setVisible(true);
+        scroll_posts.setVisible(true);
 
+        if(old_posts != null) {
+            frame.remove(old_posts);
+        }
+        
         frame.add(scroll_posts, BorderLayout.CENTER);
+        old_posts = scroll_posts;
+        frame.revalidate();
+        frame.repaint();
+        
     }
 }
