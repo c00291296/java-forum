@@ -14,6 +14,7 @@ public class ForumGUI {
     JFrame frame;
     Forum forum;
     Subforum[] subforums;
+    Subforum current_subforum;
     JScrollPane old_posts;
 
 
@@ -33,8 +34,13 @@ public class ForumGUI {
         frame.setResizable(false);
         frame.setLayout(layout);
         refreshSubforumList();
-        refreshPostDisplay(subforums[0]);
+        current_subforum = subforums[0];
+        refreshPostDisplay(current_subforum);
         frame.setVisible(true);
+    }
+
+    private void refreshTopPanel( ) {
+
     }
 
     private void refreshSubforumList() {
@@ -47,7 +53,8 @@ public class ForumGUI {
         var list = new JList<String>(subforumNames);
         list.addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent me) {
-                refreshPostDisplay(subforums[list.getSelectedIndex()]);
+                current_subforum = subforums[list.getSelectedIndex()];
+                refreshPostDisplay(current_subforum);
             }
         });
         list.setFixedCellWidth(WINDOW_WIDTH / 5);
