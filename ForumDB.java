@@ -106,8 +106,9 @@ public class ForumDB {
             var rs = ps.executeQuery();
             rs.next();
             System.out.println(rs.getString("name"));
+            String name = rs.getString("name");
             ps.close();
-            return rs.toString();
+            return name;
         } catch (Exception e) {
             e.printStackTrace();
             return e.getStackTrace().toString();

@@ -12,6 +12,7 @@ import java.awt.event.MouseEvent;
 import javax.swing.JTextArea;
 import javax.swing.border.Border;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
@@ -23,18 +24,17 @@ public class ForumGUI {
     JScrollPane old_posts;
     JPanel top_panel;
     User current_user;
+    ForumDB fdb;
 
 
     final static int WINDOW_WIDTH = 800;
     final static int WINDOW_HEIGHT = 600;
 
-    public ForumGUI(Forum forum) {
+    public ForumGUI(Forum forum, ForumDB fdb) {
         this.forum = forum;
+        this.fdb = fdb;
         frame = new JFrame("The Forum", null);
 
-        
-        
-        
         var layout = new BorderLayout(0, 0);
         
         frame.setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
@@ -54,9 +54,24 @@ public class ForumGUI {
         if(current_user!=null) {
             username = current_user.getName();
             b.setText("Log Out");
+            b.addMouseListener(new MouseAdapter() {
+                public void mouseClicked(MouseEvent me) {
+                    current_user = null;
+                    refreshTopPanel();
+                }
+            });
         } else {
             username = "Guest";
             b.setText("Log In");
+            b.addMouseListener(new MouseAdapter() {
+                public void mouseClicked(MouseEvent me) {
+                    current_user = new User(Integer.parseInt(JOptionPane.showInputDialog("Enter unique user id to log in:")), fdb);
+                    if(current_user.getName().equals("null")) {
+                        current_user = null;
+                    }
+                    refreshTopPanel();
+                }
+            });
         }
         username="👤 " + username; //looks nice
         var l = new JLabel(username);

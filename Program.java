@@ -14,7 +14,7 @@ public class Program {
 
         ForumDB fdb = new ForumDB();
         Forum f = new Forum(fdb);
-        ForumGUI gui = new ForumGUI(f);
+        ForumGUI gui = new ForumGUI(f, fdb);
         
     }
 }
