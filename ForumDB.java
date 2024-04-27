@@ -68,7 +68,7 @@ public class ForumDB {
     
     public void censorPost (int postID) {
         try {
-            var ps = connection.prepareStatement("UPDATE Posts SET text = '[CENSORED]' WHERE id = ?;");
+            var ps = connection.prepareStatement("UPDATE Posts SET body = '[CENSORED]' WHERE id = ?;");
             ps.setInt(1, postID);
             ps.executeUpdate();
             ps.close();

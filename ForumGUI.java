@@ -15,6 +15,7 @@ import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import java.awt.Point;
 
 public class ForumGUI {
     JFrame frame;
@@ -29,6 +30,16 @@ public class ForumGUI {
 
     final static int WINDOW_WIDTH = 800;
     final static int WINDOW_HEIGHT = 600;
+
+    private class PostTextArea extends JTextArea {
+        public PostTextArea(String text) {
+            super(text);
+            post = null;
+        }
+        private Post post;
+        public Post getPost() {return post;}
+        public void setPost(Post p) {post = p;}
+    }
 
     public ForumGUI(Forum forum, ForumDB fdb) {
         this.forum = forum;
@@ -58,6 +69,7 @@ public class ForumGUI {
                 public void mouseClicked(MouseEvent me) {
                     current_user = null;
                     refreshTopPanel();
+                    refreshPostDisplay(current_subforum);
                 }
             });
         } else {
@@ -70,6 +82,7 @@ public class ForumGUI {
                         current_user = null;
                     }
                     refreshTopPanel();
+                    refreshPostDisplay(current_subforum);
                 }
             });
         }
@@ -124,11 +137,27 @@ public class ForumGUI {
         
         for (Post p : subforum.getPosts()) {
             System.out.println(p.getBody());
-            JTextArea a = new JTextArea(p.getAuthor() + ", " + p.getTitle() + ":\n" + p.getBody() + "\n" + p.getDate());
+            JPanel pp = new JPanel(new BorderLayout());
+            PostTextArea a = new PostTextArea(p.getAuthor() + ", " + p.getTitle() + ":\n" + p.getBody() + "\n" + p.getDate());
+            a.setPost(p);
             a.setLineWrap(true);
             a.setEditable(false);
             a.setVisible(true);
-            posts.add(a);
+            a.setSize(WINDOW_WIDTH / 10 * 6, 10000);
+            pp.add(a, BorderLayout.WEST);
+            if (current_user instanceof Moderator) {
+                JButton b = new JButton("Censor!");
+                b.addMouseListener(new MouseAdapter() {
+                    public void mouseClicked(MouseEvent me) {
+                        a.getPost().getCensored();
+                        refreshPostDisplay(subforum);
+                    }
+                } );
+                b.setVisible(true);
+                pp.add(b, BorderLayout.EAST);
+            }
+            pp.setVisible(true);
+            posts.add(pp);
         }
         posts.setVisible(true);
         scroll_posts.setVisible(true);
@@ -138,6 +167,7 @@ public class ForumGUI {
         }
         
         frame.add(scroll_posts, BorderLayout.CENTER);
+        scroll_posts.getViewport().setViewPosition(new Point(0, 0));
         old_posts = scroll_posts;
         frame.revalidate();
         frame.repaint();
