@@ -26,6 +26,7 @@ public class ForumGUI {
     JPanel top_panel;
     User current_user;
     ForumDB fdb;
+    JList<String> sub_list;
 
 
     final static int WINDOW_WIDTH = 800;
@@ -62,6 +63,20 @@ public class ForumGUI {
         JPanel t = new JPanel(new FlowLayout(FlowLayout.RIGHT), false);
         String username;
         JButton b = new JButton();
+
+        if(current_user instanceof Moderator) {
+            Moderator m = (Moderator)current_user;
+            JButton add_sub = new JButton("Create Subforum");
+            add_sub.addMouseListener(new MouseAdapter() {
+                public void mouseClicked(MouseEvent me) {
+                    m.createSubforum(JOptionPane.showInputDialog("Please enter name for new subforum!"));
+                    refreshSubforumList();
+                }
+            });
+            add_sub.setVisible(true);
+            t.add(add_sub);
+        }
+
         if(current_user!=null) {
             username = current_user.getName();
             b.setText("Log Out");
@@ -125,7 +140,12 @@ public class ForumGUI {
         });
         list.setFixedCellWidth(WINDOW_WIDTH / 5);
         list.setVisible(true);
+        if(sub_list != null)
+            frame.remove(sub_list);
         frame.add(list, BorderLayout.WEST);
+        sub_list = list;
+        frame.revalidate();
+        frame.repaint();
     }
 
     private void refreshPostDisplay(Subforum subforum) {
@@ -146,10 +166,11 @@ public class ForumGUI {
             a.setSize(WINDOW_WIDTH / 10 * 6, 10000);
             pp.add(a, BorderLayout.WEST);
             if (current_user instanceof Moderator) {
+                Moderator m = (Moderator)current_user;
                 JButton b = new JButton("Censor!");
                 b.addMouseListener(new MouseAdapter() {
                     public void mouseClicked(MouseEvent me) {
-                        a.getPost().getCensored();
+                        m.censorPost(a.getPost());
                         refreshPostDisplay(subforum);
                     }
                 } );
