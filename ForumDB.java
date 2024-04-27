@@ -278,4 +278,59 @@ public class ForumDB {
         }
     }
 
+    private boolean isUserAdmin(int userid) {
+        boolean result = false;
+        try {
+            var ps = connection.prepareStatement("SELECT * FROM AdminList WHERE userid = ?;");
+            ps.setInt(1, userid);
+            ResultSet rs = ps.executeQuery();
+            if(rs.isBeforeFirst()) { // it returned something
+                result = true;
+            }
+            ps.close();
+            rs.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+    private boolean isUserModerator(int userid) {
+        boolean result = false;
+        try {
+            var ps = connection.prepareStatement("SELECT * FROM ModeratorList WHERE userid = ?;");
+            ps.setInt(1, userid);
+            ResultSet rs = ps.executeQuery();
+            if(rs.isBeforeFirst()) { // it returned something
+                result = true;
+            }
+            ps.close();
+            rs.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+    public User getUser(int userid) {
+        try {
+            if(getUserName(userid).equals("null")) {
+                return null;
+            }
+            else if (isUserAdmin(userid)) {
+                return new Admin(userid, this);
+            }
+            else if (isUserModerator(userid)) {
+                return new Moderator(userid, this);
+            }
+            else
+            {
+                return new User(userid, this);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
 }

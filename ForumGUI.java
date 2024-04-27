@@ -65,7 +65,7 @@ public class ForumGUI {
             b.setText("Log In");
             b.addMouseListener(new MouseAdapter() {
                 public void mouseClicked(MouseEvent me) {
-                    current_user = new User(Integer.parseInt(JOptionPane.showInputDialog("Enter unique user id to log in:")), fdb);
+                    current_user = fdb.getUser(Integer.parseInt(JOptionPane.showInputDialog("Enter unique user id to log in:")));
                     if(current_user.getName().equals("null")) {
                         current_user = null;
                     }
@@ -73,7 +73,13 @@ public class ForumGUI {
                 }
             });
         }
-        username="👤 " + username; //looks nice
+        String status_symbol = "👤";
+        if(current_user instanceof Admin) { //status symbol
+            status_symbol = "👑";
+        } else if (current_user instanceof Moderator) {
+            status_symbol = "🗡️";
+        }
+        username = status_symbol + " " + username; //looks nice
         var l = new JLabel(username);
         l.setVisible(true);
         t.add(l);
