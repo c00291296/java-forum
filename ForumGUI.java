@@ -64,9 +64,37 @@ public class ForumGUI {
         String username;
         JButton b = new JButton();
 
+        if(current_user instanceof User) {
+            JButton post = new JButton("New Post");
+            post.addMouseListener(new MouseAdapter() {
+                public void mouseClicked(MouseEvent me) {
+                    var choice = JOptionPane.showInputDialog("Enter post text");
+                    Post p = current_user.createPost("responded to " + current_subforum.getTitle(), choice);
+                    current_subforum.addPost(p);
+                    refreshPostDisplay(current_subforum);
+                }
+            });
+            post.setVisible(true);
+            post.setSize(40, -1);
+            t.add(post);
+        }
+
+        if(current_user instanceof Admin) {
+            Admin adm = (Admin)current_user;
+            JButton promote = new JButton("New Mod");
+            promote.addMouseListener(new MouseAdapter() {
+                public void mouseClicked(MouseEvent me) {
+                    var choice = JOptionPane.showInputDialog("Enter id of the user to promote to Moderator!");
+                    adm.appointModerator(new User(Integer.parseInt(choice), fdb));
+                }
+            });
+            promote.setVisible(true);
+            t.add(promote);
+        }
+
         if(current_user instanceof Moderator) {
             Moderator m = (Moderator)current_user;
-            JButton add_sub = new JButton("Create Subforum");
+            JButton add_sub = new JButton("New Sub");
             add_sub.addMouseListener(new MouseAdapter() {
                 public void mouseClicked(MouseEvent me) {
                     m.createSubforum(JOptionPane.showInputDialog("Please enter name for new subforum!"));

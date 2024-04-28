@@ -91,7 +91,7 @@ public class ForumDB {
 
     public void appointModerator(int userID) {
         try {
-            var ps = connection.prepareStatement("INSERT INTO AdminList VALUES (?);");
+            var ps = connection.prepareStatement("INSERT INTO ModeratorList (userid) SELECT Users.id FROM Users WHERE Users.id = ?;");
             ps.setInt(1, userID);
             ps.executeUpdate();
         } catch (Exception e) {
