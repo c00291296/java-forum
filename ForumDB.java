@@ -15,6 +15,12 @@ public class ForumDB {
     private Connection connection;
     private int id = 0;
 
+    /*
+     * Constructor for the ForumDB class
+     * 
+     * @return a new forumdb  object
+     */
+
     public ForumDB() {
         try {
             Class.forName("org.sqlite.JDBC");
@@ -23,7 +29,9 @@ public class ForumDB {
             e.printStackTrace();
         }
     }
-
+    /*
+    * Prints all the users from the database
+    */
     public void printUsers() {
         try {
             var s = connection.createStatement();
@@ -38,6 +46,11 @@ public class ForumDB {
         }
     }
 
+    /*
+     * Adds a new subforum to the forum
+     * 
+     * @param name the name of the subforum to be added
+     */
     public void addSubforum(String name) {
         try {
         var ps = connection.prepareStatement("INSERT INTO Subforum (name) VALUES (?);");
@@ -49,6 +62,15 @@ public class ForumDB {
         }
     }
 
+    /*
+     * Adds a new post to the subforum
+     * 
+     * @param subforum_id id of the subforum where post is to be added
+     * @param post_title heading of the post to be added
+     * @param post_body body, the text of the forum post to be added
+     * @param post_date the purported date when the post was posted
+     * @param userid the id of the user who posted the post
+     */
     public void addPostToSubforum(int subforum_id, String post_title, String post_body, String post_date,
                                   int userid)
         {
@@ -66,6 +88,11 @@ public class ForumDB {
             }
         }
     
+    /*
+     * Censors a subforum post based on id
+     * 
+     * @param postID the id of the post to be censored.
+     */
     public void censorPost (int postID) {
         try {
             var ps = connection.prepareStatement("UPDATE Posts SET body = '[CENSORED]' WHERE id = ?;");
@@ -77,6 +104,12 @@ public class ForumDB {
         }
     }
 
+    /*
+     * Sets the body of the post to a specified string.
+     * 
+     * @param postID id of the post to be altered
+     * @param body the text string that the body of the post is going to be replaced with
+     */
     public void setPostBody (int postID, String body) {
         try {
             var ps = connection.prepareStatement("UPDATE Posts SET text = ? WHERE id = ?;");
@@ -89,6 +122,11 @@ public class ForumDB {
         }
     }
 
+    /*
+     * Adds a user to the list of moderators based on the id
+     * 
+     * @param userID id of the user to be promoted to the moderator status
+     */
     public void appointModerator(int userID) {
         try {
             var ps = connection.prepareStatement("INSERT INTO ModeratorList (userid) SELECT Users.id FROM Users WHERE Users.id = ?;");
@@ -99,6 +137,12 @@ public class ForumDB {
         }
     }
 
+    /*
+     * Gets the name of the user with the specified id
+     * 
+     * @param userid id of the user to get the username of
+     * @return the name of the user
+     */
     public String getUserName(int userid) {
         try {
             var ps = connection.prepareStatement("select name from Users where id = ?;");
@@ -115,6 +159,9 @@ public class ForumDB {
         }
     }
 
+    /*
+     * set
+     */
     public void setUserName(int userid, String name) {
         try {
             var ps = connection.prepareStatement("UPDATE Users SET name=? where id = ?;");
